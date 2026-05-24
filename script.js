@@ -76,11 +76,13 @@ function toggleTheme() {
 
 // Settings Panel
 function openSettings() {
+  settingsOverlay.style.display = 'flex';
   settingsOverlay.hidden = false;
   document.body.style.overflow = 'hidden';
 }
 
 function closeSettingsPanel() {
+  settingsOverlay.style.display = 'none';
   settingsOverlay.hidden = true;
   document.body.style.overflow = '';
 }
@@ -90,8 +92,21 @@ function initSettings() {
   const savedKey = localStorage.getItem('pollinations-api-key') || '';
   if (apiKeyInput) {
     apiKeyInput.value = savedKey;
-    apiKeyInput.addEventListener('change', () => {
-      localStorage.setItem('pollinations-api-key', apiKeyInput.value.trim());
+  }
+
+  // Save API key button
+  const saveApiKeyBtn = $('saveApiKey');
+  const apiKeyStatus = $('apiKeyStatus');
+  
+  if (saveApiKeyBtn) {
+    saveApiKeyBtn.addEventListener('click', () => {
+      const key = apiKeyInput.value.trim();
+      localStorage.setItem('pollinations-api-key', key);
+      apiKeyStatus.textContent = '✅ API key saved!';
+      apiKeyStatus.className = 'api-status success';
+      setTimeout(() => {
+        apiKeyStatus.textContent = '';
+      }, 2000);
     });
   }
 

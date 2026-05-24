@@ -593,6 +593,33 @@ select:focus { outline: none; border-color: var(--primary); }
 
 .setting-item small a:hover { text-decoration: underline; }
 
+.api-key-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.api-key-row input {
+  flex: 1;
+}
+
+.btn-save {
+  background: var(--success);
+  white-space: nowrap;
+}
+
+.btn-save:hover {
+  opacity: 0.9;
+}
+
+.api-status {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.api-status.success {
+  color: var(--success);
+}
+
 /* Models Table */
 .models-table, .tiers-table {
   border: 1px solid var(--border);

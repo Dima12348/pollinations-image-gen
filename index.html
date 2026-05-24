@@ -233,8 +233,12 @@
           <h3>🔑 API Configuration</h3>
           <div class="setting-item">
             <label for="apiKey">API Key (optional)</label>
-            <input type="password" id="apiKey" placeholder="Enter your Pollinations API key">
+            <div class="api-key-row">
+              <input type="password" id="apiKey" placeholder="Enter your Pollinations API key">
+              <button id="saveApiKey" class="btn-small btn-save">💾 Save</button>
+            </div>
             <small>Get your key at <a href="https://auth.pollinations.ai" target="_blank">auth.pollinations.ai</a></small>
+            <div id="apiKeyStatus" class="api-status"></div>
           </div>
         </div>
 
