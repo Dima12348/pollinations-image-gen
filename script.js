@@ -25,6 +25,9 @@ const batchGenerateBtn = $('batchGenerateBtn');
 const batchGrid = $('batchGrid');
 const templatesGrid = $('templatesGrid');
 const apiKeyInput = $('apiKey');
+const settingsBtn = $('settingsBtn');
+const settingsOverlay = $('settingsOverlay');
+const closeSettings = $('closeSettings');
 
 const aspectSizes = {
   '1:1': { width: 1024, height: 1024 },
@@ -58,17 +61,6 @@ let gallery = JSON.parse(localStorage.getItem('pollinations-gallery') || '[]');
 let currentImageUrl = null;
 let currentPromptStyle = '';
 
-// Init API key from localStorage
-function initApiKey() {
-  const savedKey = localStorage.getItem('pollinations-api-key') || '';
-  if (apiKeyInput) {
-    apiKeyInput.value = savedKey;
-    apiKeyInput.addEventListener('change', () => {
-      localStorage.setItem('pollinations-api-key', apiKeyInput.value.trim());
-    });
-  }
-}
-
 // Theme
 function initTheme() {
   const saved = localStorage.getItem('pollinations-theme') || 'dark';
@@ -80,6 +72,60 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('pollinations-theme', next);
+}
+
+// Settings Panel
+function openSettings() {
+  settingsOverlay.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSettingsPanel() {
+  settingsOverlay.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function initSettings() {
+  // Load saved API key
+  const savedKey = localStorage.getItem('pollinations-api-key') || '';
+  if (apiKeyInput) {
+    apiKeyInput.value = savedKey;
+    apiKeyInput.addEventListener('change', () => {
+      localStorage.setItem('pollinations-api-key', apiKeyInput.value.trim());
+    });
+  }
+
+  // Load saved settings
+  const savedWidth = localStorage.getItem('pollinations-width') || '1024';
+  const savedHeight = localStorage.getItem('pollinations-height') || '1024';
+  const savedNologo = localStorage.getItem('pollinations-nologo') !== 'false';
+  const savedEnhance = localStorage.getItem('pollinations-enhance') === 'true';
+
+  if ($('widthInput')) $('widthInput').value = savedWidth;
+  if ($('heightInput')) $('heightInput').value = savedHeight;
+  if ($('nologo')) $('nologo').checked = savedNologo;
+  if ($('enhancePrompt')) $('enhancePrompt').checked = savedEnhance;
+
+  // Save settings on change
+  if ($('widthInput')) $('widthInput').addEventListener('change', () => {
+    localStorage.setItem('pollinations-width', $('widthInput').value);
+  });
+  if ($('heightInput')) $('heightInput').addEventListener('change', () => {
+    localStorage.setItem('pollinations-height', $('heightInput').value);
+  });
+  if ($('nologo')) $('nologo').addEventListener('change', () => {
+    localStorage.setItem('pollinations-nologo', $('nologo').checked);
+  });
+  if ($('enhancePrompt')) $('enhancePrompt').addEventListener('change', () => {
+    localStorage.setItem('pollinations-enhance', $('enhancePrompt').checked);
+  });
+
+  // Event listeners
+  settingsBtn.addEventListener('click', openSettings);
+  closeSettings.addEventListener('click', closeSettingsPanel);
+  settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) closeSettingsPanel();
+  });
 }
 
 // Tabs
@@ -136,7 +182,8 @@ function buildImageUrl(prompt, model, ratio, seed) {
   const seedParam = seed !== '' ? `&seed=${seed}` : `&seed=${Math.floor(Math.random() * 1000000)}`;
   const nologo = $('nologo') && $('nologo').checked ? '&nologo=true' : '';
   const negParam = neg ? `&negative=${encodeURIComponent(neg)}` : '';
-  return `${API_BASE}/${encodedPrompt}?width=${w}&height=${h}&model=${model}${seedParam}${nologo}${negParam}&t=${Date.now()}`;
+  const enhanceParam = $('enhancePrompt') && $('enhancePrompt').checked ? '&enhance=true' : '';
+  return `${API_BASE}/${encodedPrompt}?width=${w}&height=${h}&model=${model}${seedParam}${nologo}${negParam}${enhanceParam}&t=${Date.now()}`;
 }
 
 // Loading state
@@ -195,6 +242,7 @@ async function generateImage() {
   if (!prompt) { promptInput.focus(); return; }
 
   showLoading(generateBtn, true);
+  resultSection.hidden = true;
 
   const model = modelSelect.value;
   const ratio = ratioSelect.value;
@@ -202,10 +250,21 @@ async function generateImage() {
   const url = buildImageUrl(prompt, model, ratio, seed);
 
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Generation failed');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
+    const response = await fetch(url, { 
+      signal: controller.signal,
+      mode: 'cors'
+    });
+    
+    clearTimeout(timeoutId);
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const blob = await response.blob();
+    if (blob.size === 0) throw new Error('Empty response');
+
     const imageUrl = URL.createObjectURL(blob);
 
     generatedImage.src = imageUrl;
@@ -224,8 +283,12 @@ async function generateImage() {
       timestamp: Date.now()
     });
   } catch (error) {
-    alert('Failed to generate image. Please try again.');
-    console.error(error);
+    if (error.name === 'AbortError') {
+      alert('Generation timed out. Please try again or use a smaller size.');
+    } else {
+      alert('Failed to generate image. Please try again.');
+    }
+    console.error('Generation error:', error);
   } finally {
     showLoading(generateBtn, false);
   }
@@ -240,7 +303,7 @@ async function enhancePrompt() {
   enhanceBtn.textContent = '⏳ Enhancing...';
 
   try {
-    const model = $('enhanceModel') ? $('enhanceModel').value : 'openai';
+    const model = 'openai';
     const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
     
     const headers = { 'Content-Type': 'application/json' };
@@ -338,14 +401,18 @@ async function batchGenerate() {
   $('batchTotal').textContent = count;
   batchGrid.innerHTML = '';
 
-  const promises = [];
   for (let i = 0; i < count; i++) {
     $('batchProgress').textContent = i + 1;
     const seed = Math.floor(Math.random() * 1000000);
     const url = buildImageUrl(prompt, model, ratio, seed);
 
     try {
-      const response = await fetch(url);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
       if (!response.ok) throw new Error('Failed');
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
@@ -433,6 +500,9 @@ function initShortcuts() {
       case 'c': e.preventDefault(); copyUrl(); break;
       case 'r': e.preventDefault(); regenerate(); break;
       case 't': e.preventDefault(); toggleTheme(); break;
+      case 'escape': 
+        if (!settingsOverlay.hidden) closeSettingsPanel();
+        break;
     }
   });
 }
@@ -457,6 +527,6 @@ initTheme();
 initTabs();
 initPresets();
 initShortcuts();
-initApiKey();
+initSettings();
 renderTemplates();
 renderGallery();

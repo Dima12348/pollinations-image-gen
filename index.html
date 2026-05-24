@@ -19,8 +19,8 @@
           <h1>Pollinations Studio</h1>
         </div>
         <div class="header-actions">
-          <button id="themeToggle" class="btn-icon" title="Toggle theme (T)">🌓</button>
-
+          <button id="themeToggle" class="btn-icon" title="Toggle theme">🌓</button>
+          <button id="settingsBtn" class="btn-icon" title="Settings">⚙️</button>
         </div>
       </div>
       <p class="subtitle">Advanced AI image generation with multiple models & styles</p>
@@ -49,7 +49,7 @@
           <div class="input-group">
             <div class="label-row">
               <label for="prompt">Describe your image</label>
-              <button id="enhanceBtn" class="btn-small" title="AI Enhance prompt (E)">✨ Enhance</button>
+              <button id="enhanceBtn" class="btn-small" title="AI Enhance prompt">✨ Enhance</button>
             </div>
             <textarea id="prompt" placeholder="A majestic dragon flying over a crystal lake at sunset, fantasy art, highly detailed..." rows="3"></textarea>
           </div>
@@ -63,14 +63,18 @@
             <div class="control-group">
               <label for="model">Model</label>
               <select id="model">
-                <option value="flux">Flux (High Quality)</option>
-                <option value="flux-realism">Flux Realism (Photo)</option>
-                <option value="flux-anime">Flux Anime</option>
-                <option value="flux-3d">Flux 3D</option>
-                <option value="flux-cablyai">Flux Cablyai</option>
-                <option value="turbo">Turbo (Fast)</option>
-                <option value="kontext">Kontext (Image-to-Image)</option>
-                <option value="sana">Sana</option>
+                <optgroup label="🎨 Flux Models">
+                  <option value="flux" selected>Flux (High Quality)</option>
+                  <option value="flux-realism">Flux Realism (Photo)</option>
+                  <option value="flux-anime">Flux Anime</option>
+                  <option value="flux-3d">Flux 3D</option>
+                  <option value="flux-cablyai">Flux Cablyai</option>
+                  <option value="flux-kontext">Flux Kontext (Img2Img)</option>
+                </optgroup>
+                <optgroup label="⚡ Fast Models">
+                  <option value="turbo">Turbo (Fast)</option>
+                  <option value="sana">Sana</option>
+                </optgroup>
               </select>
             </div>
 
@@ -96,7 +100,7 @@
           <div class="style-presets">
             <label>Style Preset</label>
             <div class="preset-grid">
-              <button class="preset" data-style="">None</button>
+              <button class="preset active" data-style="">None</button>
               <button class="preset" data-style=", cinematic lighting, film grain, dramatic">Cinematic</button>
               <button class="preset" data-style=", oil painting, masterpiece, classical art">Oil Painting</button>
               <button class="preset" data-style=", watercolor, soft colors, artistic">Watercolor</button>
@@ -110,41 +114,6 @@
               <button class="preset" data-style=", cyberpunk, neon, futuristic, glowing">Cyberpunk</button>
             </div>
           </div>
-
-          <!-- Advanced Toggle -->
-          <details class="advanced-section">
-            <summary>⚙️ Advanced Settings</summary>
-            <div class="advanced-controls">
-              <div class="control-group">
-                <label for="apiKey">API Key (optional)</label>
-                <input type="password" id="apiKey" placeholder="Enter your Pollinations API key">
-              </div>
-              <div class="control-group">
-                <label for="enhanceModel">Enhancement Model</label>
-                <select id="enhanceModel">
-                  <option value="openai">OpenAI GPT</option>
-                  <option value="openai-fast">OpenAI Fast (GPT-OSS 20B)</option>
-                  <option value="openai-reasoning">OpenAI Reasoning (o4-mini)</option>
-                  <option value="gemini">Gemini</option>
-                  <option value="gemini-search">Gemini Search</option>
-                  <option value="mistral">Mistral</option>
-                </select>
-              </div>
-              <div class="control-group">
-                <label for="widthInput">Width</label>
-                <input type="number" id="widthInput" value="1024" min="256" max="2048" step="64">
-              </div>
-              <div class="control-group">
-                <label for="heightInput">Height</label>
-                <input type="number" id="heightInput" value="1024" min="256" max="2048" step="64">
-              </div>
-              <div class="control-group">
-                <label>
-                  <input type="checkbox" id="nologo" checked> Remove watermark
-                </label>
-              </div>
-            </div>
-          </details>
 
           <div class="generate-row">
             <button id="generateBtn" class="btn-generate">
@@ -162,10 +131,10 @@
           <div class="result-header">
             <h2>Your Image</h2>
             <div class="result-actions">
-              <button id="downloadBtn" class="btn-action" title="Download (D)">⬇️ Download</button>
-              <button id="copyBtn" class="btn-action" title="Copy URL (C)">📋 Copy URL</button>
+              <button id="downloadBtn" class="btn-action" title="Download">⬇️ Download</button>
+              <button id="copyBtn" class="btn-action" title="Copy URL">📋 Copy URL</button>
               <button id="shareBtn" class="btn-action" title="Share">🔗 Share</button>
-              <button id="regenerateBtn" class="btn-action" title="Regenerate with new seed (R)">🔄 Regenerate</button>
+              <button id="regenerateBtn" class="btn-action" title="Regenerate">🔄 Regenerate</button>
             </div>
           </div>
           <div class="image-container">
@@ -201,7 +170,6 @@
                 <option value="flux-3d">Flux 3D</option>
                 <option value="flux-cablyai">Flux Cablyai</option>
                 <option value="turbo">Turbo</option>
-                <option value="kontext">Kontext</option>
                 <option value="sana">Sana</option>
               </select>
             </div>
@@ -250,6 +218,188 @@
       <p>Powered by <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai</a> | <a href="https://github.com/Dima12348/pollinations-image-gen" target="_blank" rel="noopener">GitHub</a></p>
       <p class="footer-small">Open source. No signup required.</p>
     </footer>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-overlay" id="settingsOverlay" hidden>
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>⚙️ Settings</h2>
+        <button id="closeSettings" class="btn-close">✕</button>
+      </div>
+      
+      <div class="settings-content">
+        <div class="settings-section">
+          <h3>🔑 API Configuration</h3>
+          <div class="setting-item">
+            <label for="apiKey">API Key (optional)</label>
+            <input type="password" id="apiKey" placeholder="Enter your Pollinations API key">
+            <small>Get your key at <a href="https://auth.pollinations.ai" target="_blank">auth.pollinations.ai</a></small>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>🖼️ Image Models</h3>
+          <div class="models-table">
+            <div class="model-row header">
+              <span>Model</span>
+              <span>Speed</span>
+              <span>Quality</span>
+              <span>Rate Limit</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux-realism</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux-anime</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux-3d</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux-cablyai</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>flux-kontext</code></span>
+              <span>⚡⚡⚡</span>
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>turbo</code></span>
+              <span>⚡⚡⚡⚡</span>
+              <span>⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>sana</code></span>
+              <span>⚡⚡⚡⚡⚡</span>
+              <span>⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>💬 Text Models (for Enhance)</h3>
+          <div class="models-table">
+            <div class="model-row header">
+              <span>Model</span>
+              <span>Speed</span>
+              <span>Reasoning</span>
+              <span>Rate Limit</span>
+            </div>
+            <div class="model-row">
+              <span><code>openai</code></span>
+              <span>⚡⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>openai-fast</code></span>
+              <span>⚡⚡⚡⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>openai-reasoning</code></span>
+              <span>⚡⚡</span>
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>gemini</code></span>
+              <span>⚡⚡⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>gemini-search</code></span>
+              <span>⚡⚡⚡</span>
+              <span>⭐⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+            <div class="model-row">
+              <span><code>mistral</code></span>
+              <span>⚡⚡⚡⚡</span>
+              <span>⭐⭐⭐</span>
+              <span>15s anon / 5s seed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>📊 Access Tiers</h3>
+          <div class="tiers-table">
+            <div class="tier-row header">
+              <span>Tier</span>
+              <span>Rate Limit</span>
+              <span>Access</span>
+            </div>
+            <div class="tier-row">
+              <span>Anonymous</span>
+              <span>1 request / 15s</span>
+              <span>No signup</span>
+            </div>
+            <div class="tier-row">
+              <span>Seed</span>
+              <span>1 request / 5s</span>
+              <span>Free registration</span>
+            </div>
+            <div class="tier-row">
+              <span>Flower</span>
+              <span>1 request / 3s</span>
+              <span>Paid tier</span>
+            </div>
+            <div class="tier-row">
+              <span>Nectar</span>
+              <span>No limits</span>
+              <span>Enterprise</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>🖼️ Advanced Image Settings</h3>
+          <div class="setting-item">
+            <label for="widthInput">Width</label>
+            <input type="number" id="widthInput" value="1024" min="256" max="2048" step="64">
+          </div>
+          <div class="setting-item">
+            <label for="heightInput">Height</label>
+            <input type="number" id="heightInput" value="1024" min="256" max="2048" step="64">
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="nologo" checked> Remove watermark
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="enhancePrompt"> Auto-enhance prompt
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
