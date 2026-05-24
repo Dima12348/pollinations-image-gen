@@ -414,12 +414,6 @@ function initShortcuts() {
       case 'c': e.preventDefault(); copyUrl(); break;
       case 'r': e.preventDefault(); regenerate(); break;
       case 't': e.preventDefault(); toggleTheme(); break;
-      case '?': e.preventDefault(); $('shortcutsModal').hidden = !$('shortcutsModal').hidden; break;
-      case 'escape': $('shortcutsModal').hidden = true; break;
-      case '1': document.querySelectorAll('.tab')[0].click(); break;
-      case '2': document.querySelectorAll('.tab')[1].click(); break;
-      case '3': document.querySelectorAll('.tab')[2].click(); break;
-      case '4': document.querySelectorAll('.tab')[3].click(); break;
     }
   });
 }
@@ -432,7 +426,6 @@ shareBtn.addEventListener('click', shareImage);
 regenerateBtn.addEventListener('click', regenerate);
 enhanceBtn.addEventListener('click', enhancePrompt);
 $('themeToggle').addEventListener('click', toggleTheme);
-$('shortcutsBtn').addEventListener('click', () => $('shortcutsModal').hidden = false);
 $('batchGenerateBtn').addEventListener('click', batchGenerate);
 $('exportGallery').addEventListener('click', exportGallery);
 $('importGallery').addEventListener('click', () => $('importFile').click());
