@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Image Generator - Powered by Pollinations</title>
+  <meta name="description" content="Generate stunning AI images from text prompts using Pollinations.ai API. Free, fast, and no signup required.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">🎨</span>
+        <h1>AI Image Generator</h1>
+      </div>
+      <p class="subtitle">Transform your ideas into stunning visuals</p>
+      <div class="badge">
+        <a href="https://pollinations.ai" target="_blank" rel="noopener">
+          <img src="https://img.shields.io/badge/Built%20with-Pollinations-8a2be2?style=for-the-badge&logoColor=white&labelColor=6a0dad" alt="Built with Pollinations">
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="generator">
+        <div class="input-group">
+          <label for="prompt">Describe your image</label>
+          <textarea id="prompt" placeholder="A majestic dragon flying over a crystal lake at sunset, fantasy art, highly detailed..." rows="3"></textarea>
+        </div>
+
+        <div class="controls">
+          <div class="control-group">
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="flux">Flux (High Quality)</option>
+              <option value="flux-realism">Flux Realism</option>
+              <option value="flux-anime">Flux Anime</option>
+              <option value="flux-3d">Flux 3D</option>
+              <option value="turbo">Turbo (Fast)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="ratio">Aspect Ratio</label>
+            <select id="ratio">
+              <option value="1:1">1:1 Square</option>
+              <option value="16:9">16:9 Landscape</option>
+              <option value="9:16">9:16 Portrait</option>
+              <option value="4:3">4:3 Classic</option>
+              <option value="3:4">3:4 Vertical</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="seed">Seed (optional)</label>
+            <input type="number" id="seed" placeholder="Random" min="0">
+          </div>
+        </div>
+
+        <button id="generateBtn" class="btn-generate">
+          <span class="btn-text">Generate Image</span>
+          <span class="btn-loading" hidden>
+            <span class="spinner"></span>
+            Generating...
+          </span>
+        </button>
+      </section>
+
+      <section class="result" id="resultSection" hidden>
+        <div class="result-header">
+          <h2>Your Image</h2>
+          <div class="result-actions">
+            <button id="downloadBtn" class="btn-action" title="Download">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download
+            </button>
+            <button id="copyBtn" class="btn-action" title="Copy URL">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy URL
+            </button>
+          </div>
+        </div>
+        <div class="image-container">
+          <img id="generatedImage" src="" alt="AI Generated Image">
+        </div>
+        <div class="image-info" id="imageInfo"></div>
+      </section>
+
+      <section class="gallery" id="gallerySection">
+        <h2>Recent Generations</h2>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Powered by <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai</a> | Free AI Image Generation</p>
+      <p class="footer-small">No signup required. Images are generated using state-of-the-art AI models.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
