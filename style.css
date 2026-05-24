@@ -168,7 +168,7 @@ textarea:focus, .search-input:focus {
   border-color: var(--primary);
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="password"] {
   width: 100%;
   padding: 0.7rem;
   background: var(--bg-input);

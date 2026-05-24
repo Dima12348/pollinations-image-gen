@@ -1,5 +1,5 @@
 const API_BASE = 'https://image.pollinations.ai/prompt';
-const TEXT_API = 'https://text.pollinations.ai';
+const TEXT_API = 'https://text.pollinations.ai/openai';
 
 const $ = id => document.getElementById(id);
 
@@ -24,6 +24,7 @@ const gallerySearch = $('gallerySearch');
 const batchGenerateBtn = $('batchGenerateBtn');
 const batchGrid = $('batchGrid');
 const templatesGrid = $('templatesGrid');
+const apiKeyInput = $('apiKey');
 
 const aspectSizes = {
   '1:1': { width: 1024, height: 1024 },
@@ -56,6 +57,17 @@ const templates = [
 let gallery = JSON.parse(localStorage.getItem('pollinations-gallery') || '[]');
 let currentImageUrl = null;
 let currentPromptStyle = '';
+
+// Init API key from localStorage
+function initApiKey() {
+  const savedKey = localStorage.getItem('pollinations-api-key') || '';
+  if (apiKeyInput) {
+    apiKeyInput.value = savedKey;
+    apiKeyInput.addEventListener('change', () => {
+      localStorage.setItem('pollinations-api-key', apiKeyInput.value.trim());
+    });
+  }
+}
 
 // Theme
 function initTheme() {
@@ -229,9 +241,16 @@ async function enhancePrompt() {
 
   try {
     const model = $('enhanceModel') ? $('enhanceModel').value : 'openai';
-    const response = await fetch(`${TEXT_API}`, {
+    const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+    
+    const headers = { 'Content-Type': 'application/json' };
+    if (apiKey) {
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    }
+
+    const response = await fetch(TEXT_API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         model,
         messages: [{
@@ -438,5 +457,6 @@ initTheme();
 initTabs();
 initPresets();
 initShortcuts();
+initApiKey();
 renderTemplates();
 renderGallery();

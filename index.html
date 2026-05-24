@@ -64,11 +64,13 @@
               <label for="model">Model</label>
               <select id="model">
                 <option value="flux">Flux (High Quality)</option>
-                <option value="flux-realism">Flux Realism</option>
+                <option value="flux-realism">Flux Realism (Photo)</option>
                 <option value="flux-anime">Flux Anime</option>
                 <option value="flux-3d">Flux 3D</option>
                 <option value="flux-cablyai">Flux Cablyai</option>
                 <option value="turbo">Turbo (Fast)</option>
+                <option value="kontext">Kontext (Image-to-Image)</option>
+                <option value="sana">Sana</option>
               </select>
             </div>
 
@@ -114,10 +116,17 @@
             <summary>⚙️ Advanced Settings</summary>
             <div class="advanced-controls">
               <div class="control-group">
+                <label for="apiKey">API Key (optional)</label>
+                <input type="password" id="apiKey" placeholder="Enter your Pollinations API key">
+              </div>
+              <div class="control-group">
                 <label for="enhanceModel">Enhancement Model</label>
                 <select id="enhanceModel">
                   <option value="openai">OpenAI GPT</option>
+                  <option value="openai-fast">OpenAI Fast (GPT-OSS 20B)</option>
+                  <option value="openai-reasoning">OpenAI Reasoning (o4-mini)</option>
                   <option value="gemini">Gemini</option>
+                  <option value="gemini-search">Gemini Search</option>
                   <option value="mistral">Mistral</option>
                 </select>
               </div>
@@ -189,7 +198,11 @@
                 <option value="flux">Flux</option>
                 <option value="flux-realism">Flux Realism</option>
                 <option value="flux-anime">Flux Anime</option>
+                <option value="flux-3d">Flux 3D</option>
+                <option value="flux-cablyai">Flux Cablyai</option>
                 <option value="turbo">Turbo</option>
+                <option value="kontext">Kontext</option>
+                <option value="sana">Sana</option>
               </select>
             </div>
             <div class="control-group">
