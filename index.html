@@ -1,110 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Image Generator - Powered by Pollinations</title>
-  <meta name="description" content="Generate stunning AI images from text prompts using Pollinations.ai API. Free, fast, and no signup required.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+  <title>Pollinations Studio — AI Image Generator</title>
+  <meta name="description" content="Advanced AI image generator with multiple models, style presets, batch generation, and AI prompt enhancement. Powered by Pollinations.ai">
+  <meta name="theme-color" content="#8a2be2">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
     <header>
-      <div class="logo">
-        <span class="logo-icon">🎨</span>
-        <h1>AI Image Generator</h1>
+      <div class="header-top">
+        <div class="logo">
+          <span class="logo-icon">🌸</span>
+          <h1>Pollinations Studio</h1>
+        </div>
+        <div class="header-actions">
+          <button id="themeToggle" class="btn-icon" title="Toggle theme (T)">🌓</button>
+          <button id="shortcutsBtn" class="btn-icon" title="Keyboard shortcuts (?)">⌨️</button>
+        </div>
       </div>
-      <p class="subtitle">Transform your ideas into stunning visuals</p>
-      <div class="badge">
+      <p class="subtitle">Advanced AI image generation with multiple models & styles</p>
+      <div class="badges">
         <a href="https://pollinations.ai" target="_blank" rel="noopener">
           <img src="https://img.shields.io/badge/Built%20with-Pollinations-8a2be2?style=for-the-badge&logoColor=white&labelColor=6a0dad" alt="Built with Pollinations">
+        </a>
+        <a href="https://github.com/Dima12348/pollinations-image-gen" target="_blank" rel="noopener">
+          <img src="https://img.shields.io/badge/Open%20Source-⭐%20Star-ff69b4?style=for-the-badge&logo=github" alt="GitHub">
         </a>
       </div>
     </header>
 
     <main>
-      <section class="generator">
-        <div class="input-group">
-          <label for="prompt">Describe your image</label>
-          <textarea id="prompt" placeholder="A majestic dragon flying over a crystal lake at sunset, fantasy art, highly detailed..." rows="3"></textarea>
+      <!-- Tabs -->
+      <nav class="tabs">
+        <button class="tab active" data-tab="generate">🎨 Generate</button>
+        <button class="tab" data-tab="batch">📦 Batch</button>
+        <button class="tab" data-tab="gallery">🖼️ Gallery</button>
+        <button class="tab" data-tab="templates">📋 Templates</button>
+      </nav>
+
+      <!-- Generate Tab -->
+      <section class="tab-content active" id="tab-generate">
+        <div class="generator">
+          <div class="input-group">
+            <div class="label-row">
+              <label for="prompt">Describe your image</label>
+              <button id="enhanceBtn" class="btn-small" title="AI Enhance prompt (E)">✨ Enhance</button>
+            </div>
+            <textarea id="prompt" placeholder="A majestic dragon flying over a crystal lake at sunset, fantasy art, highly detailed..." rows="3"></textarea>
+          </div>
+
+          <div class="input-group" id="negativeGroup">
+            <label for="negativePrompt">Negative prompt (what to avoid)</label>
+            <input type="text" id="negativePrompt" placeholder="blurry, low quality, distorted, watermark...">
+          </div>
+
+          <div class="controls">
+            <div class="control-group">
+              <label for="model">Model</label>
+              <select id="model">
+                <option value="flux">Flux (High Quality)</option>
+                <option value="flux-realism">Flux Realism</option>
+                <option value="flux-anime">Flux Anime</option>
+                <option value="flux-3d">Flux 3D</option>
+                <option value="flux-cablyai">Flux Cablyai</option>
+                <option value="turbo">Turbo (Fast)</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="ratio">Aspect Ratio</label>
+              <select id="ratio">
+                <option value="1:1">1:1 Square</option>
+                <option value="16:9">16:9 Landscape</option>
+                <option value="9:16">9:16 Portrait</option>
+                <option value="4:3">4:3 Classic</option>
+                <option value="3:4">3:4 Vertical</option>
+                <option value="21:9">21:9 Ultrawide</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="seed">Seed</label>
+              <input type="number" id="seed" placeholder="Random" min="0">
+            </div>
+          </div>
+
+          <!-- Style Presets -->
+          <div class="style-presets">
+            <label>Style Preset</label>
+            <div class="preset-grid">
+              <button class="preset" data-style="">None</button>
+              <button class="preset" data-style=", cinematic lighting, film grain, dramatic">Cinematic</button>
+              <button class="preset" data-style=", oil painting, masterpiece, classical art">Oil Painting</button>
+              <button class="preset" data-style=", watercolor, soft colors, artistic">Watercolor</button>
+              <button class="preset" data-style=", anime style, vibrant, detailed anime">Anime</button>
+              <button class="preset" data-style=", pixel art, 16-bit, retro game">Pixel Art</button>
+              <button class="preset" data-style=", photorealistic, 8k, hyper detailed, RAW photo">Photo Real</button>
+              <button class="preset" data-style=", 3d render, octane render, studio lighting">3D Render</button>
+              <button class="preset" data-style=", comic book style, bold lines, vibrant colors">Comic</button>
+              <button class="preset" data-style=", minimalist, clean, simple, white background">Minimalist</button>
+              <button class="preset" data-style=", dark fantasy, gothic, moody, atmospheric">Dark Fantasy</button>
+              <button class="preset" data-style=", cyberpunk, neon, futuristic, glowing">Cyberpunk</button>
+            </div>
+          </div>
+
+          <!-- Advanced Toggle -->
+          <details class="advanced-section">
+            <summary>⚙️ Advanced Settings</summary>
+            <div class="advanced-controls">
+              <div class="control-group">
+                <label for="enhanceModel">Enhancement Model</label>
+                <select id="enhanceModel">
+                  <option value="openai">OpenAI GPT</option>
+                  <option value="gemini">Gemini</option>
+                  <option value="mistral">Mistral</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="widthInput">Width</label>
+                <input type="number" id="widthInput" value="1024" min="256" max="2048" step="64">
+              </div>
+              <div class="control-group">
+                <label for="heightInput">Height</label>
+                <input type="number" id="heightInput" value="1024" min="256" max="2048" step="64">
+              </div>
+              <div class="control-group">
+                <label>
+                  <input type="checkbox" id="nologo" checked> Remove watermark
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <div class="generate-row">
+            <button id="generateBtn" class="btn-generate">
+              <span class="btn-text">🎨 Generate Image</span>
+              <span class="btn-loading" hidden>
+                <span class="spinner"></span>
+                Generating...
+              </span>
+            </button>
+          </div>
         </div>
 
-        <div class="controls">
-          <div class="control-group">
-            <label for="model">Model</label>
-            <select id="model">
-              <option value="flux">Flux (High Quality)</option>
-              <option value="flux-realism">Flux Realism</option>
-              <option value="flux-anime">Flux Anime</option>
-              <option value="flux-3d">Flux 3D</option>
-              <option value="turbo">Turbo (Fast)</option>
-            </select>
+        <!-- Result -->
+        <div class="result" id="resultSection" hidden>
+          <div class="result-header">
+            <h2>Your Image</h2>
+            <div class="result-actions">
+              <button id="downloadBtn" class="btn-action" title="Download (D)">⬇️ Download</button>
+              <button id="copyBtn" class="btn-action" title="Copy URL (C)">📋 Copy URL</button>
+              <button id="shareBtn" class="btn-action" title="Share">🔗 Share</button>
+              <button id="regenerateBtn" class="btn-action" title="Regenerate with new seed (R)">🔄 Regenerate</button>
+            </div>
           </div>
-
-          <div class="control-group">
-            <label for="ratio">Aspect Ratio</label>
-            <select id="ratio">
-              <option value="1:1">1:1 Square</option>
-              <option value="16:9">16:9 Landscape</option>
-              <option value="9:16">9:16 Portrait</option>
-              <option value="4:3">4:3 Classic</option>
-              <option value="3:4">3:4 Vertical</option>
-            </select>
+          <div class="image-container">
+            <img id="generatedImage" src="" alt="AI Generated Image">
           </div>
-
-          <div class="control-group">
-            <label for="seed">Seed (optional)</label>
-            <input type="number" id="seed" placeholder="Random" min="0">
-          </div>
+          <div class="image-info" id="imageInfo"></div>
         </div>
-
-        <button id="generateBtn" class="btn-generate">
-          <span class="btn-text">Generate Image</span>
-          <span class="btn-loading" hidden>
-            <span class="spinner"></span>
-            Generating...
-          </span>
-        </button>
       </section>
 
-      <section class="result" id="resultSection" hidden>
-        <div class="result-header">
-          <h2>Your Image</h2>
-          <div class="result-actions">
-            <button id="downloadBtn" class="btn-action" title="Download">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download
-            </button>
-            <button id="copyBtn" class="btn-action" title="Copy URL">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-              Copy URL
-            </button>
+      <!-- Batch Tab -->
+      <section class="tab-content" id="tab-batch">
+        <div class="generator">
+          <div class="input-group">
+            <label for="batchPrompt">Prompt for batch generation</label>
+            <textarea id="batchPrompt" placeholder="A cute cat in different art styles..." rows="3"></textarea>
           </div>
+          <div class="controls">
+            <div class="control-group">
+              <label for="batchCount">Number of images</label>
+              <select id="batchCount">
+                <option value="2">2 images</option>
+                <option value="4" selected>4 images</option>
+                <option value="6">6 images</option>
+                <option value="8">8 images</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="batchModel">Model</label>
+              <select id="batchModel">
+                <option value="flux">Flux</option>
+                <option value="flux-realism">Flux Realism</option>
+                <option value="flux-anime">Flux Anime</option>
+                <option value="turbo">Turbo</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label for="batchRatio">Aspect Ratio</label>
+              <select id="batchRatio">
+                <option value="1:1">1:1</option>
+                <option value="16:9">16:9</option>
+                <option value="9:16">9:16</option>
+              </select>
+            </div>
+          </div>
+          <button id="batchGenerateBtn" class="btn-generate">
+            <span class="btn-text">📦 Generate Batch</span>
+            <span class="btn-loading" hidden>
+              <span class="spinner"></span>
+              Generating <span id="batchProgress">0</span>/<span id="batchTotal">4</span>...
+            </span>
+          </button>
         </div>
-        <div class="image-container">
-          <img id="generatedImage" src="" alt="AI Generated Image">
-        </div>
-        <div class="image-info" id="imageInfo"></div>
+        <div class="batch-grid" id="batchGrid"></div>
       </section>
 
-      <section class="gallery" id="gallerySection">
-        <h2>Recent Generations</h2>
+      <!-- Gallery Tab -->
+      <section class="tab-content" id="tab-gallery">
+        <div class="gallery-controls">
+          <input type="text" id="gallerySearch" placeholder="🔍 Search by prompt..." class="search-input">
+          <div class="gallery-actions">
+            <button id="exportGallery" class="btn-small">📥 Export</button>
+            <button id="importGallery" class="btn-small">📤 Import</button>
+            <button id="clearGallery" class="btn-small btn-danger">🗑️ Clear</button>
+          </div>
+          <input type="file" id="importFile" accept=".json" hidden>
+        </div>
         <div class="gallery-grid" id="galleryGrid"></div>
+        <p class="empty-state" id="emptyGallery" hidden>No images yet. Start generating!</p>
+      </section>
+
+      <!-- Templates Tab -->
+      <section class="tab-content" id="tab-templates">
+        <div class="templates-grid" id="templatesGrid"></div>
       </section>
     </main>
 
     <footer>
-      <p>Powered by <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai</a> | Free AI Image Generation</p>
-      <p class="footer-small">No signup required. Images are generated using state-of-the-art AI models.</p>
+      <p>Powered by <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai</a> | <a href="https://github.com/Dima12348/pollinations-image-gen" target="_blank" rel="noopener">GitHub</a></p>
+      <p class="footer-small">Open source. No signup required. <kbd>T</kbd> theme · <kbd>?</kbd> shortcuts</p>
     </footer>
+  </div>
+
+  <!-- Shortcuts Modal -->
+  <div class="modal" id="shortcutsModal" hidden>
+    <div class="modal-content">
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <div class="shortcuts-list">
+        <div class="shortcut"><kbd>Enter</kbd> Generate image</div>
+        <div class="shortcut"><kbd>E</kbd> Enhance prompt</div>
+        <div class="shortcut"><kbd>D</kbd> Download image</div>
+        <div class="shortcut"><kbd>C</kbd> Copy URL</div>
+        <div class="shortcut"><kbd>R</kbd> Regenerate</div>
+        <div class="shortcut"><kbd>T</kbd> Toggle theme</div>
+        <div class="shortcut"><kbd>?</kbd> Show shortcuts</div>
+        <div class="shortcut"><kbd>Esc</kbd> Close modal</div>
+        <div class="shortcut"><kbd>1-4</kbd> Switch tabs</div>
+      </div>
+      <button class="btn-small" onclick="document.getElementById('shortcutsModal').hidden=true">Close</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
