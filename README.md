@@ -92,7 +92,7 @@ Deploy as a static site to:
 
 MIT License — see [LICENSE](LICENSE)
 
-## 🙏 Credits
+## 🌐 About
 
-- Built with [Pollinations.ai](https://pollinations.ai) — Open-source AI platform
-- Created by [@Dima12348](https://github.com/Dima12348)
+Powered by [Pollinations.ai](https://pollinations.ai) — Open-source generative AI platform.
+Created by [@Dima12348](https://github.com/Dima12348)
