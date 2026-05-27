@@ -42,7 +42,7 @@ cd pollinations-image-gen
 
 2. Open `index.html` in your browser, or serve locally:
 ```bash
-python -m http.server 8000
+python3 -m http.server 8000
 ```
 
 3. Open `http://localhost:8000` and start generating!
