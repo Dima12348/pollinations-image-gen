@@ -27,22 +27,10 @@ Advanced AI image generator powered by [Pollinations.ai](https://pollinations.ai
 
 ### User Experience
 - **Dark/Light Theme** - Toggle with `T` key
-- **Keyboard Shortcuts** - Power user workflow
 - **PWA Support** - Install as app on mobile/desktop
 - **Share Support** - Share images directly to social media
 - **Responsive Design** - Works perfectly on all devices
 - **No Signup Required** - Start generating immediately
-
-## Keyboard Shortcuts
-
-| Key | Action |
-|-----|--------|
-| `Enter` | Generate image |
-| `E` | Enhance prompt |
-| `D` | Download image |
-| `C` | Copy URL |
-| `R` | Regenerate (new seed) |
-| `T` | Toggle theme |
 
 ## Quick Start
 
