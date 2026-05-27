@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pollinations Studio — AI Image Generator</title>
-  <meta name="description" content="Advanced AI image generator with multiple models, style presets, batch generation, and AI prompt enhancement. Powered by Pollinations.ai">
+  <meta name="description" content="Advanced AI image generator with multiple models, style presets, batch generation, AI prompt enhancement. Powered by Pollinations.ai">
   <meta name="theme-color" content="#8a2be2">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
@@ -38,9 +38,12 @@
       <!-- Tabs -->
       <nav class="tabs">
         <button class="tab active" data-tab="generate">🎨 Generate</button>
+        <button class="tab" data-tab="img2img">🖼️ Img2Img</button>
         <button class="tab" data-tab="batch">📦 Batch</button>
         <button class="tab" data-tab="gallery">🖼️ Gallery</button>
         <button class="tab" data-tab="templates">📋 Templates</button>
+        <button class="tab" data-tab="history">📜 History</button>
+        <button class="tab" data-tab="compare">⚖️ Compare</button>
       </nav>
 
       <!-- Generate Tab -->
@@ -135,12 +138,105 @@
               <button id="copyBtn" class="btn-action" title="Copy URL">📋 Copy URL</button>
               <button id="shareBtn" class="btn-action" title="Share">🔗 Share</button>
               <button id="regenerateBtn" class="btn-action" title="Regenerate">🔄 Regenerate</button>
+              <button id="useAsSourceBtn" class="btn-action" title="Use as Img2Img source">🖼️ Edit</button>
             </div>
           </div>
           <div class="image-container">
             <img id="generatedImage" src="" alt="AI Generated Image">
           </div>
           <div class="image-info" id="imageInfo"></div>
+        </div>
+      </section>
+
+      <!-- Img2Img Tab -->
+      <section class="tab-content" id="tab-img2img">
+        <div class="generator">
+          <div class="img2img-upload">
+            <label>Source Image</label>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="imageUpload" accept="image/*" hidden>
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <span class="upload-icon">📁</span>
+                <p>Click or drag image here</p>
+                <small>Supports JPG, PNG, WebP</small>
+              </div>
+              <div class="upload-preview" id="uploadPreview" hidden>
+                <img id="previewImage" src="" alt="Preview">
+                <button id="clearImage" class="btn-close-small">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="label-row">
+              <label for="img2imgPrompt">Describe changes</label>
+              <button id="img2imgEnhanceBtn" class="btn-small" title="AI Enhance prompt">✨ Enhance</button>
+            </div>
+            <textarea id="img2imgPrompt" placeholder="Transform this into a watercolor painting..." rows="3"></textarea>
+          </div>
+
+          <div class="input-group">
+            <label for="img2imgNegative">Negative prompt</label>
+            <input type="text" id="img2imgNegative" placeholder="blurry, low quality...">
+          </div>
+
+          <div class="controls">
+            <div class="control-group">
+              <label for="img2imgStrength">Transformation Strength: <span id="strengthValue">70</span>%</label>
+              <input type="range" id="img2imgStrength" min="10" max="100" value="70" class="slider">
+              <small>Lower = closer to original, Higher = more changes</small>
+            </div>
+
+            <div class="control-group">
+              <label for="img2imgRatio">Output Size</label>
+              <select id="img2imgRatio">
+                <option value="1:1">1:1 Square</option>
+                <option value="16:9">16:9 Landscape</option>
+                <option value="9:16">9:16 Portrait</option>
+                <option value="4:3">4:3 Classic</option>
+                <option value="3:4">3:4 Vertical</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="img2imgSeed">Seed</label>
+              <input type="number" id="img2imgSeed" placeholder="Random" min="0">
+            </div>
+          </div>
+
+          <div class="generate-row">
+            <button id="img2imgGenerateBtn" class="btn-generate">
+              <span class="btn-text">🖼️ Transform Image</span>
+              <span class="btn-loading" hidden>
+                <span class="spinner"></span>
+                Transforming...
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Img2Img Result -->
+        <div class="result" id="img2imgResult" hidden>
+          <div class="result-header">
+            <h2>Transformed Image</h2>
+            <div class="result-actions">
+              <button id="img2imgDownload" class="btn-action" title="Download">⬇️ Download</button>
+              <button id="img2imgCopy" class="btn-action" title="Copy URL">📋 Copy URL</button>
+              <button id="img2imgShare" class="btn-action" title="Share">🔗 Share</button>
+              <button id="img2imgUseAsSource" class="btn-action" title="Use as new source">🔄 Iterate</button>
+            </div>
+          </div>
+          <div class="comparison-container">
+            <div class="comparison-side">
+              <h3>Original</h3>
+              <img id="img2imgOriginal" src="" alt="Original">
+            </div>
+            <div class="comparison-side">
+              <h3>Transformed</h3>
+              <img id="img2imgResultImage" src="" alt="Transformed">
+            </div>
+          </div>
+          <div class="image-info" id="img2imgInfo"></div>
         </div>
       </section>
 
@@ -211,6 +307,76 @@
       <!-- Templates Tab -->
       <section class="tab-content" id="tab-templates">
         <div class="templates-grid" id="templatesGrid"></div>
+      </section>
+
+      <!-- History Tab -->
+      <section class="tab-content" id="tab-history">
+        <div class="history-controls">
+          <div class="history-tabs">
+            <button class="history-tab active" data-history="recent">🕐 Recent</button>
+            <button class="history-tab" data-history="saved">⭐ Saved</button>
+          </div>
+          <button id="clearHistory" class="btn-small btn-danger">🗑️ Clear History</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+        <p class="empty-state" id="emptyHistory" hidden>No prompts yet. Start generating!</p>
+      </section>
+
+      <!-- Compare Tab -->
+      <section class="tab-content" id="tab-compare">
+        <div class="compare-generator">
+          <div class="input-group">
+            <label for="comparePrompt">Prompt for comparison</label>
+            <textarea id="comparePrompt" placeholder="A beautiful sunset over mountains..." rows="2"></textarea>
+          </div>
+          <div class="compare-controls">
+            <div class="control-group">
+              <label>Model A</label>
+              <select id="compareModelA">
+                <option value="flux" selected>Flux</option>
+                <option value="flux-realism">Flux Realism</option>
+                <option value="flux-anime">Flux Anime</option>
+                <option value="flux-3d">Flux 3D</option>
+                <option value="flux-cablyai">Flux Cablyai</option>
+                <option value="turbo">Turbo</option>
+                <option value="sana">Sana</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Model B</label>
+              <select id="compareModelB">
+                <option value="flux">Flux</option>
+                <option value="flux-realism" selected>Flux Realism</option>
+                <option value="flux-anime">Flux Anime</option>
+                <option value="flux-3d">Flux 3D</option>
+                <option value="flux-cablyai">Flux Cablyai</option>
+                <option value="turbo">Turbo</option>
+                <option value="sana">Sana</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Seed (same for both)</label>
+              <input type="number" id="compareSeed" placeholder="Random" min="0">
+            </div>
+          </div>
+          <button id="compareGenerateBtn" class="btn-generate">
+            <span class="btn-text">⚖️ Compare Models</span>
+            <span class="btn-loading" hidden>
+              <span class="spinner"></span>
+              Generating...
+            </span>
+          </button>
+        </div>
+        <div class="compare-results" id="compareResults" hidden>
+          <div class="compare-side">
+            <h3 id="compareTitleA">Flux</h3>
+            <img id="compareImageA" src="" alt="Model A">
+          </div>
+          <div class="compare-side">
+            <h3 id="compareTitleB">Flux Realism</h3>
+            <img id="compareImageB" src="" alt="Model B">
+          </div>
+        </div>
       </section>
     </main>
 
