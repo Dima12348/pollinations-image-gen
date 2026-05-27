@@ -1,4 +1,4 @@
-# Pollinations Studio - AI Image Generator
+# 🌸 Pollinations Studio - AI Image Generator
 
 Advanced AI image generator powered by [Pollinations.ai](https://pollinations.ai). Multiple models, style presets, batch generation, AI prompt enhancement, Image-to-Image editing, and more.
 
