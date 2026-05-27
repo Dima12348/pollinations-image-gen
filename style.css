@@ -126,6 +126,17 @@ header { text-align: center; margin-bottom: 2rem; }
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.tab-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
 }
 .tab.active {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
